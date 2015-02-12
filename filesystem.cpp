@@ -23,7 +23,7 @@ namespace utils {
 
 //-------------------------------------------------------------------------------------------------
 path::path(
-  const string &file, const ::std::string parent, bool isfolder) 
+  const string &file, const ::std::string &parent, bool isfolder) 
   : file_(file), parent_(parent), isfolder_(isfolder) {
 }
 
