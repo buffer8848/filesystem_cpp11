@@ -7,7 +7,6 @@
 #include <list>
 #include <memory>
 #include <string>
-//#include <xutility>
 
 //-------------------------------------------------------------------------------------------------
 namespace pa2davatar {
@@ -41,7 +40,7 @@ private:
 //folder
 class filesystem_entry;
 class directory_iterator 
-  : public ::std::iterator<::std::input_iterator_tag, void, void, void, void> {
+  : public ::std::iterator<std::input_iterator_tag, void, void, void, void> {
  public:
   explicit directory_iterator(const ::std::string& file);
   directory_iterator();
@@ -60,7 +59,7 @@ class directory_iterator
 
 //-------------------------------------------------------------------------------------------------
 class recursive_directory_iterator 
-  : public ::std::iterator<::std::input_iterator_tag, void, void, void, void> {
+  : public ::std::iterator<std::input_iterator_tag, void, void, void, void> {
  public:
   explicit recursive_directory_iterator(const ::std::string& file);
   recursive_directory_iterator();
@@ -74,7 +73,7 @@ class recursive_directory_iterator
   }
   
  private:
-  ::std::list<::std::pair<::std::string, ::std::shared_ptr<filesystem_entry> > > entrys_;
+  ::std::list<std::pair<std::string, ::std::shared_ptr<filesystem_entry> > > entrys_;
 };
 
 } //! namespace pa2davatar

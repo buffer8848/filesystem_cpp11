@@ -1,8 +1,10 @@
 // Copyright (c) 2014 Intel Corporation.
 // Author:  LI,Binfei (binfeix.li@intel.com)
 
-#include "utils/filesystem.h"
+#include "../../src/utils/filesystem.h"
+#include <string.h>
 
+#include <iostream>
 #include <string>
 
 #ifndef _WIN32
@@ -23,7 +25,7 @@ namespace utils {
 
 //-------------------------------------------------------------------------------------------------
 path::path(
-  const string &file, const ::std::string &parent, bool isfolder) 
+  const string &file, const ::std::string parent, bool isfolder) 
   : file_(file), parent_(parent), isfolder_(isfolder) {
 }
 
@@ -50,9 +52,10 @@ class filesystem_entry {
     handle_ = opendir(file.c_str());
     if (handle_ != nullptr) {
       //strip "." and ".."
-      pathInfo_ = readdir(handle_); // strip "."
-      pathInfo_ = readdir(handle_); // strip ".."
+      //pathInfo_ = readdir(handle_); // strip "."
+      //pathInfo_ = readdir(handle_); // strip ".."
       pathInfo_ = readdir(handle_);
+      stripHideFolder();
     }
   }
   filesystem_entry(filesystem_entry& entry) {
@@ -75,6 +78,7 @@ class filesystem_entry {
 
   filesystem_entry& next() {
     pathInfo_ = readdir(handle_);
+    stripHideFolder();
     if (pathInfo_ == nullptr) {
       release();
     }
@@ -86,6 +90,7 @@ class filesystem_entry {
       return false;
     return true;
   }
+
   path get() {
     bool isfolder = (pathInfo_->d_type == DT_DIR);
     return path(pathInfo_->d_name, "", isfolder);
@@ -95,6 +100,17 @@ class filesystem_entry {
     if (handle_ == entry.handle_) //TODO(binfei):just judgement handle
       return true;
     return false;
+  }
+
+  bool stripHideFolder() {
+    while (pathInfo_ != nullptr) {
+      if (strncmp(pathInfo_->d_name, ".", 1) != 0)
+        break;
+      else
+        pathInfo_ = readdir(handle_);
+  }
+
+    return true;
   }
 
  private:
@@ -221,6 +237,10 @@ recursive_directory_iterator& recursive_directory_iterator::operator++() {
       break;
 
     shared_ptr<filesystem_entry> entry = entrys_.back().second;
+    if (!entry->valid()) {
+      entrys_.pop_back();
+      break;
+    }
     entry->next();
     if (entry->valid()) {
       path _path = entry->get();
