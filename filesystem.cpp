@@ -1,7 +1,7 @@
 // Copyright (c) 2014 Intel Corporation.
 // Author:  LI,Binfei (binfeix.li@intel.com)
 
-#include "../../src/utils/filesystem.h"
+#include "filesystem.h"
 #include <string.h>
 
 #include <iostream>
