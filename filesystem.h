@@ -9,20 +9,19 @@
 #include <string>
 
 //-------------------------------------------------------------------------------------------------
-namespace pa2davatar {
+namespace avatar {
 namespace utils {
 
 //-------------------------------------------------------------------------------------------------
+//path merge
 class path {
 public:
   explicit path(
     const ::std::string& file, const ::std::string parent = "", bool isfolder = false);
-  bool exists();
   bool isfolder() {
     return isfolder_;
   }
 
-  const ::std::string extension() const;
   ::std::string name() const {
     if (parent_.empty())
       return file_;
@@ -30,10 +29,52 @@ public:
       return parent_ + "/" + file_;
   }
 
+  ::std::string extension() const {
+    size_t pos = file_.rfind('.');
+    if (pos != ::std::string::npos) {
+      return file_.substr(pos, file_.length() - pos);
+    }
+
+    return "";
+  }
+
 private:
   ::std::string parent_;
   ::std::string file_;
   bool isfolder_;
+};
+
+//path detect
+class path2 {
+public:
+  explicit path2(const ::std::string& file): file_(file) {
+    size_t index = file_.rfind('/');
+    if (index != ::std::string::npos) {
+      parent_ = file_.substr(0, index);
+      name_ = file_.substr(index, file_.length() - index);
+    }
+    size_t pos = file_.rfind('.');
+    if (pos != ::std::string::npos) {
+      extension_ = file_.substr(pos, file_.length() - pos);
+    }
+  }
+
+  bool exists() const;
+  const ::std::string& name() const {
+    return name_;
+  }
+  const ::std::string& parent() const {
+    return parent_;
+  }
+  const ::std::string& extension() const {
+    return extension_;
+  }
+
+private:
+  ::std::string parent_;
+  ::std::string name_;
+  ::std::string extension_;
+  ::std::string file_;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -76,7 +117,7 @@ class recursive_directory_iterator
   ::std::list<std::pair<std::string, ::std::shared_ptr<filesystem_entry> > > entrys_;
 };
 
-} //! namespace pa2davatar
+} //! namespace avatar
 } //! namespace utils
 
 #endif //! UTILS_FILESYSTEM_H

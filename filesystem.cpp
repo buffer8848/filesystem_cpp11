@@ -20,29 +20,24 @@
 using namespace std;
 
 //-------------------------------------------------------------------------------------------------
-namespace pa2davatar {
+namespace avatar {
 namespace utils {
 
 //-------------------------------------------------------------------------------------------------
+
 path::path(
   const string &file, const ::std::string parent, bool isfolder) 
   : file_(file), parent_(parent), isfolder_(isfolder) {
 }
 
-bool path::exists() {
+//-------------------------------------------------------------------------------------------------
+
+bool path2::exists() const {
   return !access(file_.c_str(), 0);
 }
 
-const string path::extension() const {
-  size_t pos = file_.rfind('.');
-  if (pos != string::npos) {
-    return file_.substr(pos, file_.length() - pos);
-  }
-
-  return "";
-}
-
 //-------------------------------------------------------------------------------------------------
+
 #ifndef _WIN32
 class filesystem_entry {
  public:
@@ -260,5 +255,5 @@ bool recursive_directory_iterator::operator!=(const recursive_directory_iterator
   return !(other.entrys_.size() == entrys_.size());//TODO(binfei):just judgement size,bug
 }
 
-} //! namespace pa2davatar
+} //! namespace avatar
 } //! namespace utils
